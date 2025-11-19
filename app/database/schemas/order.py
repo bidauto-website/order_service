@@ -6,50 +6,45 @@ from app.enums.order import InvoiceTypeEnum, OrderStatusEnum
 
 
 class OrderBase(BaseModel):
-    auction: AuctionEnum | None = Field(default=None, description="Аукцион-источник")
+    auction: AuctionEnum | None = Field(..., description="Source auction")
     order_date: datetime | None = Field(
-        default=None,
-        description="Дата создания заказа (если не указанa, БД выставит текущее время)",
+        ...,
+        description="Order creation date (if not provided, DB sets the current time)",
     )
-    lot_id: int = Field(..., description="Идентификатор лота")
-    vehicle_value: int = Field(..., ge=0, description="Стоимость автомобиля")
+    lot_id: int = Field(..., description="Lot identifier")
+    vehicle_value: int = Field(..., ge=0, description="Vehicle price")
     invoice_type: InvoiceTypeEnum = Field(
         default=InvoiceTypeEnum.NAVI_GRUPE_INVOICE,
-        description="Тип инвойса",
+        description="Invoice type",
     )
-    vehicle_type: str = Field(default="CAR", description="Тип ТС")
-    vin: str = Field(..., min_length=1, description="VIN транспортного средства")
-    vehicle_name: str = Field(..., min_length=1, description="Модель/название автомобиля")
-    keys: bool = Field(default=False, description="Есть ключи")
-    damage: bool = Field(default=False, description="ТС повреждено")
-    color: str = Field(default="Unknown", description="Цвет ТС")
-    auto_generated: bool = Field(default=False, description="Заказ создан автоматически")
-    fee_type: str = Field(..., description="Название типа комиссии")
-    delivery_status: OrderStatusEnum = Field(
-        default=OrderStatusEnum.PENDING_PAYMENT,
-        description="Статус доставки",
-    )
+    vehicle_type: str = Field(default="CAR", description="Vehicle type")
+    vin: str = Field(..., min_length=1, description="Vehicle VIN")
+    vehicle_name: str = Field(..., min_length=1, description="Vehicle model/name")
+    keys: bool = Field(default=False, description="Keys present")
+    damage: bool = Field(default=False, description="Vehicle damaged")
+    color: str = Field(default="Unknown", description="Vehicle color")
+    auto_generated: bool = Field(default=False, description="Order created automatically")
+    fee_type: str = Field(..., description="Name of the fee type")
 
-    location_id: int = Field(..., description="ID локации")
-    location_name: str = Field(..., description="Название локации")
-    location_city: str | None = Field(default=None, description="Город локации")
-    location_state: str | None = Field(default=None, description="Штат/регион локации")
-    location_postal_code: str | None = Field(
+    location_id: int = Field(..., description="Location ID")
+
+    terminal_id: int = Field(..., description="Terminal ID")
+    fee_type_id: int = Field(..., description="Fee type ID")
+
+    container_id: int | None = Field(
         default=None,
-        description="Почтовый индекс локации",
+        description="Container ID (if linked)",
     )
-
-    terminal_id: int = Field(..., description="ID терминала")
-    terminal_name: str = Field(..., description="Название терминала")
-    fee_type_id: int = Field(..., description="ID типа комиссии")
-    fee_type_name: str = Field(..., description="Название типа комиссии из калькулятора")
-
-    container_id: int | None = Field(default=None, description="ID контейнера (если привязан)")
-    user_uuid: str = Field(..., description="UUID пользователя, создавшего заказ")
+    user_uuid: str = Field(..., description="UUID of the user who created the order")
 
 
 class OrderCreate(OrderBase):
-    pass
+    location_name: str
+    location_city: str | None
+    location_state: str | None
+    location_postal_code: str | None
+    terminal_name: str
+    fee_type_name: str
 
 
 class OrderUpdate(BaseModel):
@@ -87,5 +82,12 @@ class OrderRead(OrderBase):
     id: int
     created_at: datetime
     updated_at: datetime
+    delivery_status: OrderStatusEnum
+    location_name: str
+    location_city: str | None
+    location_state: str | None
+    location_postal_code: str | None
+    terminal_name: str
+    fee_type_name: str
 
     model_config = ConfigDict(from_attributes=True)

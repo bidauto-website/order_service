@@ -2,6 +2,12 @@ from enum import Enum
 
 from pydantic_settings import BaseSettings
 
+class Permissions(str, Enum):
+    ORDER_ALL_READ = "order.all:read"
+    ORDER_ALL_WRITE = "order.all:write"
+    ORDER_ALL_DELETE = "order.all:delete"
+
+    ORDER_OWN_READ = "order.own:read"
 
 class Environment(str, Enum):
     DEVELOPMENT = "development"
@@ -19,14 +25,14 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379"
 
     # Application
-    APP_NAME: str = "calculator-service"
+    APP_NAME: str = "order-service"
     DEBUG: bool = True
     ROOT_PATH: str = ''
     ENVIRONMENT: Environment = Environment.DEVELOPMENT
 
     # RPC
+    RPC_CALCULATOR_URL: str = "localhost:50051"
     RPC_API_URL: str = "localhost:50052"
-    GRPC_SERVER_PORT: str = "50051"
 
     @property
     def enable_docs(self) -> bool:

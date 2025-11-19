@@ -5,7 +5,7 @@ import redis
 from fastapi import FastAPI
 from fastapi_problem.handler import new_exception_handler, add_exception_handler
 
-from app.api.api_v1.api import api_v1_router
+from app.routers import api_router
 from app.config import settings
 from app.core.logger import logger
 from app.core.utils import init_fastapi_cache
@@ -16,7 +16,7 @@ def setup_middleware_and_handlers(app: FastAPI):
     add_exception_handler(app, eh)
 
 def setup_routers(app: FastAPI):
-    app.include_router(api_v1_router)
+    app.include_router(api_router)
     @app.get("/health", tags=["Health"])
     async def health_check():
         return {"status": "ok"}
@@ -37,8 +37,8 @@ def create_app(
     openapi_url = "/openapi.json" if settings.enable_docs else None
 
     app = FastAPI(
-        title="Calculator service",
-        description="Calculate price for cars from auctions",
+        title="Order service",
+        description="Create and manage orders",
         version="0.0.1",
         root_path=settings.ROOT_PATH,
         docs_url=docs_url,
