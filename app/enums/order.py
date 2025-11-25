@@ -14,6 +14,7 @@ class OrderStatusEnum(str, Enum):
 class InvoiceTypeEnum(str, Enum):
     NAVI_GRUPE_INVOICE = "navi_grupe_invoice"
     T_AUTOLOGISTIC_INVOICE = "t_autologistics_invoice"
+    T_AUTOLOGISTIC_USA_INVOICE = "t_autologistics_usa_invoice"
 
 
 class AppealMessageRoleEnum(str, Enum):

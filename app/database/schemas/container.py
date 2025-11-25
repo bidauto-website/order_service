@@ -4,15 +4,14 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class ContainerBase(BaseModel):
-    destination_id: int = Field(..., description="ID направления доставки")
-    destination_name: str = Field(..., description="Название направления доставки")
-    ship_line: str = Field(default="Unknown", description="Судоходная линия")
-    vessel: str = Field(default="Unknown", description="Судно")
-    container_key: str = Field(..., min_length=1, description="Уникальный идентификатор контейнера")
+    destination_id: int = Field(..., description="Delivery destination ID")
+    ship_line: str = Field(default="Unknown", description="Shipping line")
+    vessel: str = Field(default="Unknown", description="Vessel name")
+    container_key: str = Field(..., min_length=1, description="Unique container identifier")
 
 
 class ContainerCreate(ContainerBase):
-    pass
+    destination_name: str = Field(..., description="Delivery destination name")
 
 
 class ContainerUpdate(BaseModel):
@@ -23,7 +22,7 @@ class ContainerUpdate(BaseModel):
     container_key: str | None = None
 
 
-class ContainerRead(ContainerBase):
+class ContainerRead(ContainerCreate):
     id: int
     created_at: datetime
 

@@ -14,7 +14,7 @@ from app.rpc_client.gen.python.auth.v1 import auth_pb2_grpc, auth_pb2
 
 class AuthRpcClient(BaseRpcClient[auth_pb2_grpc.AuthServiceStub]):
     def __init__(self, server_url: str | None = None):
-        super().__init__(server_url=server_url or settings.RPC_API_URL)
+        super().__init__(server_url=server_url or settings.RPC_AUTH_URL)
 
     async def __aenter__(self):
         await self.connect()

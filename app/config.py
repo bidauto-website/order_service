@@ -10,6 +10,8 @@ class Permissions(str, Enum):
     SHIP_LINE_READ = "ship-line.all:read"
     SHIP_LINE_WRITE = "ship-line.all:write"
 
+    CONTAINER_READ = "container.all:read"
+    CONTAINER_WRITE = "container.all:write"
 
     ORDER_OWN_READ = "order.own:read"
 
@@ -37,6 +39,7 @@ class Settings(BaseSettings):
     # RPC
     RPC_CALCULATOR_URL: str = "localhost:50051"
     RPC_API_URL: str = "localhost:50052"
+    RPC_AUTH_URL: str = "localhost:50054"
 
     @property
     def enable_docs(self) -> bool:
