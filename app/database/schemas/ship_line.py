@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class ShipLineBase(BaseModel):
-    ship_line: str = Field(..., description="Ship line name")
+    ship_line: str = Field(..., description="Ship line link")
 
 
 class ShipLineCreate(ShipLineBase):

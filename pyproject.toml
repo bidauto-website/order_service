@@ -19,7 +19,8 @@ dependencies = [
     "grpcio (>=1.76.0,<2.0.0)",
     "authtools @ git+https://github.com/vinasLT/shared_auth.git@v0.1.8",
     "protobuf (>=6.33.1,<7.0.0)",
-    "greenlet (>=3.2.4,<4.0.0)"
+    "greenlet (>=3.2.4,<4.0.0)",
+    "fastapi-pagination (>=0.15.0,<0.16.0)"
 ]
 
 

@@ -2,10 +2,10 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class InvoiceItemBase(BaseModel):
-    name: str = Field(..., min_length=1, description="Название услуги/позиций")
-    amount: int = Field(..., ge=0, description="Стоимость позиции в валюте инвойса")
-    is_extra_fee: bool = Field(..., description="Флаг доплаты (extra fee)")
-    order_id: int = Field(..., description="ID заказа, к которому относится позиция")
+    name: str = Field(..., min_length=1, description="Service/line item name")
+    amount: int = Field(..., ge=0, description="Line cost in the invoice currency")
+    is_extra_fee: bool = Field(default=False, description="Marks the line as an extra fee")
+    order_id: int = Field(..., description="Order ID the item belongs to")
 
 
 class InvoiceItemCreate(InvoiceItemBase):

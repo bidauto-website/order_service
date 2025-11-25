@@ -7,6 +7,10 @@ class Permissions(str, Enum):
     ORDER_ALL_WRITE = "order.all:write"
     ORDER_ALL_DELETE = "order.all:delete"
 
+    SHIP_LINE_READ = "ship-line.all:read"
+    SHIP_LINE_WRITE = "ship-line.all:write"
+
+
     ORDER_OWN_READ = "order.own:read"
 
 class Environment(str, Enum):

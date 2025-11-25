@@ -3,6 +3,7 @@ from typing import Optional, Callable
 
 import redis
 from fastapi import FastAPI
+from fastapi_pagination import add_pagination
 from fastapi_problem.handler import new_exception_handler, add_exception_handler
 
 from app.routers import api_router
@@ -46,6 +47,8 @@ def create_app(
         openapi_url=openapi_url,
         lifespan=lifespan_override or default_lifespan
     )
+
+    add_pagination(app)
 
     setup_middleware_and_handlers(app)
     setup_routers(app)
