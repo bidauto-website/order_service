@@ -48,12 +48,14 @@ class InvoiceGenerator:
             full_name = f"{user.first_name} {user.last_name}".strip()
             if full_name:
                 lines.append(full_name)
-            if user.username:
-                lines.append(user.username)
             if user.email:
                 lines.append(user.email)
             if user.phone_number:
                 lines.append('+' + user.phone_number)
+            if user.address:
+                user_address = user.address
+                lines.extend([user_address.address, user_address.city, user_address.state, user_address.country, str(user_address.zip_code)])
+
         elif getattr(self.order, "user_uuid", None):
             lines.append(f"User UUID: {self.order.user_uuid}")
 
@@ -159,8 +161,8 @@ class InvoiceGenerator:
             parent=styles["Heading1"],
             fontSize=18,
             alignment=1,
-            spaceBefore=10,
-            spaceAfter=20,
+            spaceBefore=1,
+            spaceAfter=1,
             fontName=font_bold,
             textColor=colors.black,
         )
@@ -177,6 +179,11 @@ class InvoiceGenerator:
             fontSize=10,
             fontName=font_name,
             textColor=colors.black,
+        )
+        ten_style_center = ParagraphStyle(
+            "TenStyleCenter",
+            parent=ten_style,
+            alignment=1,
         )
         normal_style = ParagraphStyle(
             "NormalStyle",
@@ -271,7 +278,7 @@ class InvoiceGenerator:
                 elements.append(Paragraph(str(subtitle), subtitle_center_style))
 
         elements.append(Paragraph("INVOICE", invoice_title_style))
-        elements.append(Spacer(1, 6))
+        elements.append(Spacer(1, 2))
 
         invoice_number = f"{self.order.vin}"
         invoice_date = (
@@ -279,15 +286,16 @@ class InvoiceGenerator:
         )
         invoice_info = Table(
             [
-                [Paragraph("Invoice Number:", ten_style), Paragraph(invoice_number, ten_style)],
-                [Paragraph("Invoice Date:", ten_style), Paragraph(invoice_date.strftime("%B %d, %Y"), ten_style)],
+                [Paragraph("<b>Invoice Number:</b>", ten_style_center), Paragraph(invoice_number, ten_style_center)],
+                [Paragraph("<b>Invoice Date:</b>", ten_style_center), Paragraph(invoice_date.strftime("%B %d, %Y"), ten_style_center)],
             ],
-            colWidths=[140, 200],
+            colWidths=[180, 180],
         )
+        invoice_info.hAlign = "CENTER"
         invoice_info.setStyle(
             TableStyle(
                 [
-                    ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
                     ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                     ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
                 ]
@@ -320,7 +328,7 @@ class InvoiceGenerator:
             )
         )
         elements.append(parties_table)
-        elements.append(Spacer(1, 10))
+        elements.append(Spacer(1, -6))
 
         auction_details = " | ".join(
             [
@@ -391,16 +399,20 @@ class InvoiceGenerator:
                     ("FONTNAME", (0, 0), (-1, 0), font_bold),
                     ("FONTSIZE", (0, 0), (-1, 0), 10),
                     ("FONTNAME", (0, 1), (-1, -1), font_name),
-                    ("FONTSIZE", (0, 1), (-1, -1), 9),
-                    ("GRID", (0, 0), (-1, -1), 0.25, colors.black),
+                    ("FONTSIZE", (0, 1), (-1, -1), 8),
+                    ("GRID", (0, 0), (-1, -1), 0.75, colors.black),
                     ("ALIGN", (1, 1), (-1, -1), "CENTER"),
                     ("ALIGN", (0, 1), (0, -1), "LEFT"),
                     ("BACKGROUND", (0, 1), (-1, -2), colors.whitesmoke),
+                    ("TOPPADDING", (0, 0), (-1, 0), 2),
+                    ("BOTTOMPADDING", (0, 0), (-1, 0), 2),
+                    ("TOPPADDING", (0, 1), (-1, -1), 1),
+                    ("BOTTOMPADDING", (0, 1), (-1, -1), 1),
                 ]
             )
         )
         elements.append(items_table)
-        elements.append(Spacer(1, 10))
+        elements.append(Spacer(1, 6))
 
         if info.delivery_terms:
             elements.append(Paragraph("<b>Delivery Terms:</b>", bold_descriptions_style))
@@ -447,6 +459,16 @@ if __name__ == "__main__":
             self.invoice_items = [
                 _DummyItem("Vehicle Price", 10000),
                 _DummyItem("Broker Fee", 500),
+                _DummyItem("Insurance", 1000),
+                _DummyItem("Shipping", 100),
+                _DummyItem("Taxes", 100),
+                _DummyItem("Extra Fee", 100),
+                _DummyItem("Total", 12000),
+                _DummyItem('test', 324),
+                _DummyItem('test2', 324),
+                _DummyItem('test3', 324),
+                _DummyItem('test4', 324),
+                _DummyItem('test5', 324),
             ]
 
     dummy_order = _DummyOrder()
